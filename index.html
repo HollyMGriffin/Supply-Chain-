@@ -9,120 +9,343 @@
 
 <body>
 
-<div class="sidebar">
-    <h2>Inventory Tracker</h2>
+<!-- LOGIN PAGE -->
+<div id="loginPage" class="login-page">
 
-    <a href="#">Dashboard</a>
-    <a href="#">Orders</a>
-    <a href="#">Log Out</a>
+    <div class="login-box">
+
+        <div class="login-title">
+            <div class="logo-circle">×</div>
+            <h1>Inventory Tracker</h1>
+        </div>
+
+        <p class="login-subtitle">
+            Sign in to access your dashboard
+        </p>
+
+        <label>Username *</label>
+        <input type="text"
+               id="username"
+               placeholder="e.g. j.doe@company.com">
+
+        <label>Password *</label>
+        <input type="password"
+               id="password"
+               placeholder="Enter password">
+
+        <div id="loginError" class="login-error">
+            <strong>Login Failed</strong>
+            <br>
+            Invalid username or password.
+            Please verify your credentials and try again.
+        </div>
+
+        <button class="sign-in-button" onclick="login()">
+            Sign In
+        </button>
+
+    </div>
+
 </div>
 
-<div class="main">
 
-    <div class="top">
-        <div>
-            <h1>Current Orders</h1>
-            <p>Track and manage orders currently in transit or processing.</p>
-        </div>
+<!-- DASHBOARD -->
+<div id="dashboard" class="dashboard">
 
-        <button onclick="showAddOrder()">+ Add Order</button>
+
+    <!-- LEFT SIDEBAR -->
+    <div class="sidebar">
+
+        <h2>Inventory Tracker</h2>
+
+        <a href="#" onclick="showOrdersPage()">Dashboard</a>
+
+        <a href="#" onclick="showOrdersPage()">Orders</a>
+
+        <a href="#" onclick="logout()">Log Out</a>
+
     </div>
 
-    <div class="search">
-        <input type="text" placeholder="Search orders...">
-        <button>Search</button>
+
+    <!-- CURRENT ORDERS PAGE -->
+    <div class="main" id="ordersPage">
+
+        <!-- PROFILE -->
+        <div class="profile-bar">
+
+            <div class="profile-text">
+                <strong>Manager</strong>
+                <span>Supply Chain Manager</span>
+            </div>
+
+            <div class="profile-circle">
+                M
+            </div>
+
+        </div>
+
+
+        <div class="top">
+
+            <div>
+                <h1>Current Orders</h1>
+
+                <p>
+                    Track and manage orders currently
+                    in transit or processing.
+                </p>
+            </div>
+
+            <button onclick="showAddOrderPage()">
+                + Add Order
+            </button>
+
+        </div>
+
+
+        <!-- SEARCH -->
+        <div class="search">
+
+            <input type="text"
+                   placeholder="Search orders...">
+
+            <button>Search</button>
+
+        </div>
+
+
+        <!-- ORDER TABLE -->
+        <table id="ordersTable">
+
+            <tr>
+
+                <th>Order #</th>
+                <th>Material</th>
+                <th>Quantity</th>
+                <th>Supplier</th>
+                <th>Est. Arrival</th>
+                <th>Required By</th>
+                <th>Status</th>
+                <th>Actions</th>
+
+            </tr>
+
+
+            <tr>
+
+                <td>ORD-001</td>
+                <td>Steel Beams</td>
+                <td>450</td>
+                <td>Steel Works</td>
+                <td>2026-10-15</td>
+                <td>2026-10-20</td>
+                <td>In Transit</td>
+
+                <td>
+
+                    <button onclick="editOrder(this)">
+                        Edit
+                    </button>
+
+                    <button onclick="cancelOrder(this)">
+                        Cancel
+                    </button>
+
+                </td>
+
+            </tr>
+
+
+            <tr>
+
+                <td>ORD-002</td>
+                <td>Copper Wiring</td>
+                <td>1200</td>
+                <td>Coastal Supply</td>
+                <td>2026-10-18</td>
+                <td>2026-10-25</td>
+                <td>Pending</td>
+
+                <td>
+
+                    <button onclick="editOrder(this)">
+                        Edit
+                    </button>
+
+                    <button onclick="cancelOrder(this)">
+                        Cancel
+                    </button>
+
+                </td>
+
+            </tr>
+
+        </table>
+
     </div>
 
-    <table id="ordersTable">
-        <tr>
-            <th>Order #</th>
-            <th>Material</th>
-            <th>Quantity</th>
-            <th>Supplier</th>
-            <th>Est. Arrival</th>
-            <th>Required By</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
 
-        <tr>
-            <td>ORD-001</td>
-            <td>Steel Beams</td>
-            <td>450</td>
-            <td>Steel Works</td>
-            <td>10/15/2026</td>
-            <td>10/20/2026</td>
-            <td>In Transit</td>
-            <td>
-                <button onclick="editOrder(this)">Edit</button>
-                <button onclick="cancelOrder(this)">Cancel</button>
-            </td>
-        </tr>
+    <!-- ADD ORDER PAGE -->
+    <div class="main order-page" id="addOrderPage">
 
-        <tr>
-            <td>ORD-002</td>
-            <td>Copper Wiring</td>
-            <td>1200</td>
-            <td>Coastal Supply</td>
-            <td>10/18/2026</td>
-            <td>10/25/2026</td>
-            <td>Pending</td>
-            <td>
-                <button onclick="editOrder(this)">Edit</button>
-                <button onclick="cancelOrder(this)">Cancel</button>
-            </td>
-        </tr>
-    </table>
-    <div id="addOrderForm" class="form-box">
+        <!-- PROFILE -->
+        <div class="profile-bar">
 
-        <h2>Add New Order</h2>
-        <p>Enter the information for the new order.</p>
+            <div class="profile-text">
+                <strong>Manager</strong>
+                <span>Supply Chain Manager</span>
+            </div>
 
-        <label>Material</label>
-        <input type="text" id="material">
+            <div class="profile-circle">
+                M
+            </div>
 
-        <label>Quantity</label>
-        <input type="number" id="quantity">
-
-        <label>Supplier</label>
-        <input type="text" id="supplier">
-
-        <label>Cost</label>
-        <input type="number" id="cost">
-
-        <label>Estimated Arrival Date</label>
-        <input type="date" id="arrival">
-
-        <label>Required By Date</label>
-        <input type="date" id="required">
-
-        <div class="form-buttons">
-            <button onclick="hideAddOrder()">Cancel</button>
-            <button onclick="saveOrder()">Save Order</button>
         </div>
-        <div id="editOrderForm" class="form-box">
 
-            <h2>Update Order</h2>
-            <p>Modify the order information below.</p>
+
+        <h1>Add New Order</h1>
+
+        <p>
+            Input a new material supply order
+            into the tracking system.
+        </p>
+
+
+        <div class="order-form">
+
+            <h3>Order Specifications</h3>
+
 
             <label>Material</label>
-            <input type="text" id="editMaterial">
+
+            <input type="text"
+                   id="material"
+                   placeholder="Enter material">
+
 
             <label>Quantity</label>
-            <input type="number" id="editQuantity">
+
+            <input type="number"
+                   id="quantity"
+                   placeholder="Enter quantity">
+
 
             <label>Supplier</label>
-            <input type="text" id="editSupplier">
+
+            <input type="text"
+                   id="supplier"
+                   placeholder="Enter supplier">
+
+
+            <label>Cost</label>
+
+            <input type="number"
+                   id="cost"
+                   placeholder="Enter cost">
+
 
             <label>Estimated Arrival Date</label>
-            <input type="date" id="editArrival">
+
+            <input type="date"
+                   id="arrival">
+
 
             <label>Required By Date</label>
-            <input type="date" id="editRequired">
+
+            <input type="date"
+                   id="required">
+
 
             <div class="form-buttons">
-                <button onclick="hideEditOrder()">Cancel</button>
-                <button onclick="saveChanges()">Save Changes</button>
+
+                <button class="cancel-button"
+                        onclick="showOrdersPage()">
+                    Cancel
+                </button>
+
+                <button onclick="saveOrder()">
+                    Save Order
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- UPDATE ORDER PAGE -->
+    <div class="main order-page" id="editOrderPage">
+
+        <!-- PROFILE -->
+        <div class="profile-bar">
+
+            <div class="profile-text">
+                <strong>Manager</strong>
+                <span>Supply Chain Manager</span>
+            </div>
+
+            <div class="profile-circle">
+                M
+            </div>
+
+        </div>
+
+
+        <h1>Update Order</h1>
+
+        <p>
+            Modify an order to ensure all
+            information is correct.
+        </p>
+
+
+        <div class="order-form">
+
+            <h3>Edit Specifications</h3>
+
+
+            <label>Material</label>
+
+            <input type="text"
+                   id="editMaterial">
+
+
+            <label>Quantity</label>
+
+            <input type="number"
+                   id="editQuantity">
+
+
+            <label>Supplier</label>
+
+            <input type="text"
+                   id="editSupplier">
+
+
+            <label>Estimated Arrival Date</label>
+
+            <input type="date"
+                   id="editArrival">
+
+
+            <label>Required By Date</label>
+
+            <input type="date"
+                   id="editRequired">
+
+
+            <div class="form-buttons">
+
+                <button class="cancel-button"
+                        onclick="showOrdersPage()">
+                    Cancel
+                </button>
+
+                <button onclick="saveChanges()">
+                    Save Changes
+                </button>
+
             </div>
 
         </div>
@@ -131,7 +354,9 @@
 
 </div>
 
+
 <script src="script.js"></script>
 
 </body>
+
 </html>
