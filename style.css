@@ -1,0 +1,133 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fb;
+    color: #222;
+}
+
+/* Left side menu */
+.sidebar {
+    width: 200px;
+    height: 100vh;
+    background-color: white;
+    position: fixed;
+    border-right: 1px solid #ddd;
+    padding: 20px;
+}
+
+.sidebar h2 {
+    color: #244ba0;
+    margin-bottom: 30px;
+}
+
+.sidebar a {
+    display: block;
+    padding: 12px;
+    margin-bottom: 8px;
+    text-decoration: none;
+    color: #333;
+    border-radius: 4px;
+}
+
+.sidebar a:hover {
+    background-color: #eef3ff;
+    color: #244ba0;
+}
+
+/* Main page */
+.main {
+    margin-left: 240px;
+    padding: 40px;
+}
+
+.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+h1 {
+    margin-bottom: 5px;
+}
+
+p {
+    color: #666;
+}
+
+/* Buttons */
+button {
+    background-color: #244ba0;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #193777;
+}
+
+/* Search area */
+.search {
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+.search input {
+    width: 300px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Orders table */
+table {
+    width: 100%;
+    background-color: white;
+    border-collapse: collapse;
+    border: 1px solid #ddd;
+}
+
+th {
+    background-color: #f3f5f8;
+}
+
+th,
+td {
+    padding: 14px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+td button {
+    padding: 6px 10px;
+    margin-right: 4px;
+}
+.form-box {
+    display: none;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 25px;
+    margin-top: 30px;
+    width: 450px;
+}
+
+.form-box label {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-box input {
+    width: 95%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.form-buttons {
+    margin-top: 25px;
+}
