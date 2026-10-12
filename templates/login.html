@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Inventory Tracker - Login</title>
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+
+  <body>
+    <div id="loginPage" class="login-page">
+      <div class="login-box">
+        <div class="login-title">
+          <div class="logo-circle">×</div>
+          <h1>Inventory Tracker</h1>
+        </div>
+
+        <p class="login-subtitle">Sign in to access your dashboard</p>
+
+        <label>Username *</label>
+        <input type="text" id="username" placeholder="e.g. j.doe@company.com" />
+
+        <label>Password *</label>
+        <input type="password" id="password" placeholder="Enter password" />
+
+        <div id="loginError" class="login-error">
+          <strong>Login Failed</strong>
+          <br />
+          Invalid username or password. Please verify your credentials and try
+          again.
+        </div>
+
+        <button class="sign-in-button" onclick="login()">Sign In</button>
+      </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
+  </body>
+</html>

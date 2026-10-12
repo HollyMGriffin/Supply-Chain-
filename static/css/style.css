@@ -1,297 +1,282 @@
 body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f8f9fb;
-    color: #222;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f8f9fb;
+  color: #222;
 }
-
 
 /* LOGIN PAGE */
 
 .login-page {
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #f8f9fb;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f8f9fb;
 }
 
 .login-box {
-    width: 380px;
-    background-color: white;
-    border: 1px solid #aaa;
-    border-radius: 10px;
-    padding: 35px;
+  width: 380px;
+  background-color: white;
+  border: 1px solid #aaa;
+  border-radius: 10px;
+  padding: 35px;
 }
 
 .login-title {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
 }
 
 .login-title h1 {
-    color: #244ba0;
+  color: #244ba0;
 }
 
 .logo-circle {
-    width: 25px;
-    height: 25px;
-    border: 2px solid #244ba0;
-    color: #244ba0;
-    border-radius: 50%;
-    text-align: center;
-    line-height: 22px;
-    font-weight: bold;
+  width: 25px;
+  height: 25px;
+  border: 2px solid #244ba0;
+  color: #244ba0;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 22px;
+  font-weight: bold;
 }
 
 .login-subtitle {
-    text-align: center;
-    margin-bottom: 30px;
-    color: #666;
+  text-align: center;
+  margin-bottom: 30px;
+  color: #666;
 }
 
 .login-box label {
-    display: block;
-    font-weight: bold;
-    margin-top: 18px;
-    margin-bottom: 7px;
+  display: block;
+  font-weight: bold;
+  margin-top: 18px;
+  margin-bottom: 7px;
 }
 
 .login-box input {
-    width: 94%;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+  width: 94%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
 .sign-in-button {
-    width: 100%;
-    margin-top: 25px;
-    padding: 13px;
+  width: 100%;
+  margin-top: 25px;
+  padding: 13px;
 }
 
 .login-error {
-    display: none;
-    background-color: #fff0f0;
-    border: 1px solid #e4aaaa;
-    color: #b52b2b;
-    padding: 15px;
-    margin-top: 20px;
-    border-radius: 5px;
+  display: none;
+  background-color: #fff0f0;
+  border: 1px solid #e4aaaa;
+  color: #b52b2b;
+  padding: 15px;
+  margin-top: 20px;
+  border-radius: 5px;
 }
-
-
-/* DASHBOARD */
-
-.dashboard {
-    display: none;
-}
-
 
 /* LEFT SIDE MENU */
 
 .sidebar {
-    width: 200px;
-    height: 100vh;
-    background-color: white;
-    position: fixed;
-    border-right: 1px solid #ddd;
-    padding: 20px;
+  width: 200px;
+  height: 100vh;
+  background-color: white;
+  position: fixed;
+  border-right: 1px solid #ddd;
+  padding: 20px;
 }
 
 .sidebar h2 {
-    color: #244ba0;
-    margin-bottom: 30px;
+  color: #244ba0;
+  margin-bottom: 30px;
 }
 
 .sidebar a {
-    display: block;
-    padding: 12px;
-    margin-bottom: 8px;
-    text-decoration: none;
-    color: #333;
-    border-radius: 4px;
+  display: block;
+  padding: 12px;
+  margin-bottom: 8px;
+  text-decoration: none;
+  color: #333;
+  border-radius: 4px;
 }
 
 .sidebar a:hover {
-    background-color: #eef3ff;
-    color: #244ba0;
+  background-color: #eef3ff;
+  color: #244ba0;
 }
-
 
 /* MAIN PAGE */
 
 .main {
-    margin-left: 240px;
-    padding: 40px;
+  margin-left: 240px;
+  padding: 40px;
 }
 
 .top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 h1 {
-    margin-bottom: 5px;
+  margin-bottom: 5px;
 }
 
 p {
-    color: #666;
+  color: #666;
 }
-
 
 /* PROFILE */
 
 .profile-bar {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 25px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 25px;
 }
 
 .profile-text {
-    text-align: right;
+  text-align: right;
 }
 
 .profile-text strong {
-    display: block;
+  display: block;
 }
 
 .profile-text span {
-    display: block;
-    font-size: 12px;
-    color: #777;
+  display: block;
+  font-size: 12px;
+  color: #777;
 }
 
 .profile-circle {
-    width: 38px;
-    height: 38px;
-    background-color: #244ba0;
-    color: white;
-    border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  background-color: #244ba0;
+  color: white;
+  border-radius: 50%;
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-    font-weight: bold;
+  font-weight: bold;
 }
-
 
 /* BUTTONS */
 
 button {
-    background-color: #244ba0;
-    color: white;
-    border: none;
-    padding: 10px 16px;
-    border-radius: 4px;
-    cursor: pointer;
+  background-color: #244ba0;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
 button:hover {
-    background-color: #193777;
+  background-color: #193777;
 }
 
 button:disabled {
-    background-color: #999;
-    cursor: not-allowed;
+  background-color: #999;
+  cursor: not-allowed;
 }
-
 
 /* SEARCH */
 
 .search {
-    margin-top: 30px;
-    margin-bottom: 20px;
+  margin-top: 30px;
+  margin-bottom: 20px;
 }
 
 .search input {
-    width: 300px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+  width: 300px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
-
 
 /* ORDER TABLE */
 
 table {
-    width: 100%;
-    background-color: white;
-    border-collapse: collapse;
-    border: 1px solid #ddd;
+  width: 100%;
+  background-color: white;
+  border-collapse: collapse;
+  border: 1px solid #ddd;
 }
 
 th {
-    background-color: #f3f5f8;
+  background-color: #f3f5f8;
 }
 
 th,
 td {
-    padding: 14px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
+  padding: 14px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
 }
 
 td button {
-    padding: 6px 10px;
-    margin-right: 4px;
+  padding: 6px 10px;
+  margin-right: 4px;
 }
-
 
 /* ADD AND UPDATE PAGES */
 
 .order-page {
-    display: none;
+  display: none;
 }
 
 .order-form {
-    width: 500px;
-    background-color: white;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    padding: 25px;
-    margin-top: 30px;
+  width: 500px;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 25px;
+  margin-top: 30px;
 }
 
 .order-form h3 {
-    margin-top: 0;
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 15px;
+  margin-top: 0;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 15px;
 }
 
 .order-form label {
-    display: block;
-    margin-top: 15px;
-    margin-bottom: 5px;
-    font-weight: bold;
+  display: block;
+  margin-top: 15px;
+  margin-bottom: 5px;
+  font-weight: bold;
 }
 
 .order-form input {
-    width: 95%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+  width: 95%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 .form-buttons {
-    margin-top: 25px;
-    text-align: right;
+  margin-top: 25px;
+  text-align: right;
 }
 
 .form-buttons button {
-    margin-left: 8px;
+  margin-left: 8px;
 }
 
 .cancel-button {
-    background-color: #777;
+  background-color: #777;
 }
 
 .cancel-button:hover {
-    background-color: #555;
+  background-color: #555;
 }

@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Inventory Tracker</title>
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+
+  <body>
+    <div class="sidebar">
+      <h2>Inventory Tracker</h2>
+
+      <a href="/orders">Dashboard</a>
+      <a href="/orders">Orders</a>
+      <a href="/">Log Out</a>
+    </div>
+
+    <div class="main">
+      <div class="profile-bar">
+        <div class="profile-text">
+          <strong>Manager</strong>
+          <span>Supply Chain Manager</span>
+        </div>
+
+        <div class="profile-circle">M</div>
+      </div>
+      {% block content %}{% endblock %}
+    </div>
+    {% block scripts %}{% endblock %}
+  </body>
+</html>

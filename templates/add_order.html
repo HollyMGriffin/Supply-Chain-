@@ -1,0 +1,38 @@
+{% extends "base.html" %} {% block content %}
+
+<h1>Add New Order</h1>
+<p>Input a new material supply order into the tracking system.</p>
+
+<div class="order-form">
+  <h3>Order Specifications</h3>
+
+  <label>Material</label>
+  <input type="text" id="material" placeholder="Enter material" />
+
+  <label>Quantity</label>
+  <input type="number" id="quantity" placeholder="Enter quantity" />
+
+  <label>Supplier</label>
+  <input type="text" id="supplier" placeholder="Enter supplier" />
+
+  <label>Cost</label>
+  <input type="number" id="cost" placeholder="Enter cost" />
+
+  <label>Estimated Arrival Date</label>
+  <input type="date" id="arrival" />
+
+  <label>Required By Date</label>
+  <input type="date" id="required" />
+
+  <div class="form-buttons">
+    <button class="cancel-button" onclick="window.location.href = '/orders'">
+      Cancel
+    </button>
+
+    <button onclick="saveOrder()">Save Order</button>
+  </div>
+</div>
+
+{% endblock %} {% block scripts %}
+<script src="{{ url_for('static', filename='js/order_form.js') }}"></script>
+{% endblock %}

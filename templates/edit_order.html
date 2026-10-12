@@ -1,0 +1,35 @@
+{% extends "base.html" %} {% block content %}
+
+<h1>Update Order</h1>
+<p>Modify an order to ensure all information is correct.</p>
+
+<div class="order-form">
+  <h3>Edit Specifications</h3>
+
+  <label>Material</label>
+  <input type="text" id="editMaterial" />
+
+  <label>Quantity</label>
+  <input type="number" id="editQuantity" />
+
+  <label>Supplier</label>
+  <input type="text" id="editSupplier" />
+
+  <label>Estimated Arrival Date</label>
+  <input type="date" id="editArrival" />
+
+  <label>Required By Date</label>
+  <input type="date" id="editRequired" />
+
+  <div class="form-buttons">
+    <button class="cancel-button" onclick="window.location.href = '/orders'">
+      Cancel
+    </button>
+
+    <button onclick="saveChanges()">Save Changes</button>
+  </div>
+</div>
+
+{% endblock %} {% block scripts %}
+<script src="{{ url_for('static', filename='js/order_form.js') }}"></script>
+{% endblock %}
