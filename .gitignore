@@ -35,4 +35,4 @@ __pycache__/
 .venv/
 
 ### SQLite ###
-inventory.db
+supply_chain.db

@@ -4,7 +4,7 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent
 
-DATABASE_PATH = BASE_DIR / "inventory.db"
+DATABASE_PATH = BASE_DIR / "supply_chain.db"
 SCHEMA_PATH = BASE_DIR / "schema.sql"
 
 def get_connection():
