@@ -29,35 +29,11 @@
     </tr>
   </thead>
 
-  <tbody>
-    <tr>
-      <td>ORD-001</td>
-      <td>Steel Beams</td>
-      <td>450</td>
-      <td>Steel Works</td>
-      <td>2026-10-15</td>
-      <td>2026-10-20</td>
-      <td>In Transit</td>
-      <td>
-        <button onclick="window.location.href = '/orders/1/edit'">Edit</button>
-        <button>Cancel</button>
-      </td>
-    </tr>
-
-    <tr>
-      <td>ORD-002</td>
-      <td>Copper Wiring</td>
-      <td>1200</td>
-      <td>Coastal Supply</td>
-      <td>2026-10-18</td>
-      <td>2026-10-25</td>
-      <td>Pending</td>
-      <td>
-        <button onclick="window.location.href = '/orders/1/edit'">Edit</button>
-        <button>Cancel</button>
-      </td>
-    </tr>
+  <tbody id="ordersTableBody">
   </tbody>
 </table>
 
+{% endblock %}{% block scripts %}
+<script src="{{ url_for('static', filename='js/orders.js') }}"></script>
 {% endblock %}
+

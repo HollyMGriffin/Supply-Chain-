@@ -1,7 +1,8 @@
 from flask import Flask, render_template
+from routes.orders import orders_bp
 
 app = Flask(__name__)
-
+app.register_blueprint(orders_bp)
 
 @app.route("/")
 def login_page():
