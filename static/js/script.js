@@ -1,5 +1,5 @@
-let selectedRow;
 
+let selectedRow;
 
 /* LOGIN */
 
@@ -10,7 +10,6 @@ function login() {
 
     let password =
         document.getElementById("password").value;
-
 
     if (username === "manager" &&
         password === "1234") {
@@ -69,6 +68,33 @@ function showOrdersPage() {
 }
 
 
+/* SEARCH FOR ORDER */
+
+function searchOrder() {
+
+    let orderID =
+        document.getElementById("searchOrder").value.trim();
+
+    let table =
+        document.getElementById("ordersTable");
+
+    for (let i = 1; i < table.rows.length; i++) {
+
+        if (table.rows[i].cells[0].textContent.trim() === orderID) {
+
+            let button =
+                table.rows[i].cells[7].querySelector("button");
+
+            editOrder(button);
+
+            return;
+        }
+    }
+
+    alert("No such order exists.");
+}
+
+
 /* SHOW ADD ORDER PAGE */
 
 function showAddOrderPage() {
@@ -106,9 +132,6 @@ function saveOrder() {
     let required =
         document.getElementById("required").value;
 
-
-    /* CHECK FOR EMPTY INFORMATION */
-
     if (material === "" ||
         quantity === "" ||
         supplier === "" ||
@@ -121,59 +144,45 @@ function saveOrder() {
         return;
     }
 
-
     let table =
         document.getElementById("ordersTable");
 
     let row =
         table.insertRow();
 
-
-    row.insertCell(0).innerHTML =
+    row.insertCell(0).textContent =
         "ORD-00" + (table.rows.length - 1);
 
-    row.insertCell(1).innerHTML =
+    row.insertCell(1).textContent =
         material;
 
-    row.insertCell(2).innerHTML =
+    row.insertCell(2).textContent =
         quantity;
 
-    row.insertCell(3).innerHTML =
+    row.insertCell(3).textContent =
         supplier;
 
-    row.insertCell(4).innerHTML =
+    row.insertCell(4).textContent =
         arrival;
 
-    row.insertCell(5).innerHTML =
+    row.insertCell(5).textContent =
         required;
 
-    row.insertCell(6).innerHTML =
+    row.insertCell(6).textContent =
         "Pending";
 
     row.insertCell(7).innerHTML =
         '<button onclick="editOrder(this)">Edit</button> ' +
         '<button onclick="cancelOrder(this)">Cancel</button>';
 
-
     alert("Order successfully added!");
 
-
-    /* CLEAR FORM */
-
     document.getElementById("material").value = "";
-
     document.getElementById("quantity").value = "";
-
     document.getElementById("supplier").value = "";
-
     document.getElementById("cost").value = "";
-
     document.getElementById("arrival").value = "";
-
     document.getElementById("required").value = "";
-
-
-    /* RETURN TO CURRENT ORDERS */
 
     showOrdersPage();
 }
@@ -186,22 +195,20 @@ function editOrder(button) {
     selectedRow =
         button.parentElement.parentElement;
 
-
     document.getElementById("editMaterial").value =
-        selectedRow.cells[1].innerHTML;
+        selectedRow.cells[1].textContent;
 
     document.getElementById("editQuantity").value =
-        selectedRow.cells[2].innerHTML;
+        selectedRow.cells[2].textContent;
 
     document.getElementById("editSupplier").value =
-        selectedRow.cells[3].innerHTML;
+        selectedRow.cells[3].textContent;
 
     document.getElementById("editArrival").value =
-        selectedRow.cells[4].innerHTML;
+        selectedRow.cells[4].textContent;
 
     document.getElementById("editRequired").value =
-        selectedRow.cells[5].innerHTML;
-
+        selectedRow.cells[5].textContent;
 
     document.getElementById("ordersPage").style.display =
         "none";
@@ -218,6 +225,13 @@ function editOrder(button) {
 
 function saveChanges() {
 
+    if (!selectedRow) {
+
+        alert("No such order exists.");
+
+        return;
+    }
+
     let material =
         document.getElementById("editMaterial").value;
 
@@ -233,10 +247,9 @@ function saveChanges() {
     let required =
         document.getElementById("editRequired").value;
 
-
-    if (material === "" ||
+    if (material.trim() === "" ||
         quantity === "" ||
-        supplier === "" ||
+        supplier.trim() === "" ||
         arrival === "" ||
         required === "") {
 
@@ -245,25 +258,29 @@ function saveChanges() {
         return;
     }
 
+    if (Number(quantity) <= 0) {
 
-    selectedRow.cells[1].innerHTML =
+        alert("Quantity must be greater than zero.");
+
+        return;
+    }
+
+    selectedRow.cells[1].textContent =
         material;
 
-    selectedRow.cells[2].innerHTML =
+    selectedRow.cells[2].textContent =
         quantity;
 
-    selectedRow.cells[3].innerHTML =
+    selectedRow.cells[3].textContent =
         supplier;
 
-    selectedRow.cells[4].innerHTML =
+    selectedRow.cells[4].textContent =
         arrival;
 
-    selectedRow.cells[5].innerHTML =
+    selectedRow.cells[5].textContent =
         required;
 
-
     alert("Order successfully updated!");
-
 
     showOrdersPage();
 }
@@ -273,26 +290,30 @@ function saveChanges() {
 
 function cancelOrder(button) {
 
+    let row =
+        button.parentElement.parentElement;
+
+    if (row.cells[6].textContent === "In Transit" ||
+        row.cells[6].textContent === "Shipped") {
+
+        alert("This order cannot be canceled because it has already been shipped.");
+
+        return;
+    }
+
     let answer =
         confirm("Are you sure you want to cancel this order?");
 
-
     if (answer) {
 
-        let row =
-            button.parentElement.parentElement;
-
-
-        row.cells[6].innerHTML =
+        row.cells[6].textContent =
             "Canceled";
-
 
         button.disabled =
             true;
 
-        button.innerHTML =
+        button.textContent =
             "Canceled";
-
 
         alert("Order successfully canceled!");
     }
