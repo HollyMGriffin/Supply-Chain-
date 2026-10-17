@@ -42,9 +42,15 @@ def validate_order(data, include_cost=False):
     required = str(data.get("required_by_date") or "")
 
     try:
-        date.fromisoformat(arrival)
+        arrival_date = date.fromisoformat(arrival)
         date.fromisoformat(required)
-    except ValueError:
+
+        if arrival_date < date.today():
+            raise ValueError("Arrival date cannot be in the past.")
+
+    except ValueError as error:
+        if str(error) == "Arrival date cannot be in the past.":
+            raise
         raise ValueError("Please enter valid dates.")
 
     result = {
