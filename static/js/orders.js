@@ -35,7 +35,6 @@ function isOrderExpired(createdAt) {
 
     return now.getTime() - createdDate.getTime() >= oneDayInMilliseconds;
 }
-
 /**
  * Creates table rows for each order in the db.
  * @param {*} orders 
@@ -83,7 +82,7 @@ function displayOrders(orders) {
 
         const editButton = document.createElement("button");
         editButton.textContent = "Edit";
-        editButton.disabled = expired;
+        editButton.disabled = expired || order.status !== "Pending";
 
         editButton.addEventListener("click", () => {
             window.location.href = `/orders/${order.id}/edit`;
@@ -92,8 +91,31 @@ function displayOrders(orders) {
         const cancelButton = document.createElement("button");
         cancelButton.textContent = "Cancel";
 
-        cancelButton.disabled = true;
+        cancelButton.disabled = expired || order.status !== "Pending";
+cancelButton.addEventListener("click", async () => {
+    if (!confirm("Are you sure you want to cancel this order?")) {
+        return;
+    }
 
+    try {
+        const response = await fetch(`/api/orders/${order.id}/cancel`, {
+            method: "POST"
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            alert(result.error || "Unable to cancel order.");
+            return;
+        }
+
+        alert("Order successfully canceled!");
+        loadOrders();
+
+    } catch (error) {
+        alert("Connection error. Order was not canceled.");
+    }
+});
         actionsCell.appendChild(editButton);
         actionsCell.appendChild(cancelButton);
 
