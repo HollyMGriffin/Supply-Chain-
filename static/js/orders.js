@@ -19,6 +19,36 @@ async function loadOrders() {
 }
 
 /**
+ * Cancels an order by sending a POST request to the server.
+ * @param {number} orderId 
+ * @returns 
+ */
+async function cancelOrder(orderId) {
+    if (!confirm("Are you sure you want to cancel this order?")) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`/api/orders/${orderId}/cancel`, {
+            method: "POST"
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            alert(result.error || "Unable to cancel order.");
+            return;
+        }
+
+        alert("Order successfully canceled!");
+        loadOrders();
+
+    } catch (error) {
+        alert("Connection error. Order was not canceled.");
+    }
+}
+
+/**
  * Checks if 24 hours have passed since order creation. Used
  * to decide if the edit and cancel buttons should be enabled.
  * @param {string} createdAt 
@@ -35,6 +65,7 @@ function isOrderExpired(createdAt) {
 
     return now.getTime() - createdDate.getTime() >= oneDayInMilliseconds;
 }
+
 /**
  * Creates table rows for each order in the db.
  * @param {*} orders 
@@ -92,30 +123,7 @@ function displayOrders(orders) {
         cancelButton.textContent = "Cancel";
 
         cancelButton.disabled = expired || order.status !== "Pending";
-cancelButton.addEventListener("click", async () => {
-    if (!confirm("Are you sure you want to cancel this order?")) {
-        return;
-    }
-
-    try {
-        const response = await fetch(`/api/orders/${order.id}/cancel`, {
-            method: "POST"
-        });
-
-        const result = await response.json();
-
-        if (!response.ok) {
-            alert(result.error || "Unable to cancel order.");
-            return;
-        }
-
-        alert("Order successfully canceled!");
-        loadOrders();
-
-    } catch (error) {
-        alert("Connection error. Order was not canceled.");
-    }
-});
+        cancelButton.addEventListener("click", () => cancelOrder(order.id));
         actionsCell.appendChild(editButton);
         actionsCell.appendChild(cancelButton);
 
