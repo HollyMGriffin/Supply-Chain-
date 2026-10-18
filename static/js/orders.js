@@ -15,6 +15,8 @@ async function loadOrders() {
 
     } catch (error) {
         console.error("Error:", error);
+        alert("Connection error. Unable to load orders.");
+        displayOrders([]);
     }
 }
 
