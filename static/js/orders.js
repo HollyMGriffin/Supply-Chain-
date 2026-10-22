@@ -1,3 +1,14 @@
+let allOrders = [];
+let selectedStatus = "All";
+
+/**
+ * Only the supply chain manager gets the Edit and Cancel buttons.
+ * The server enforces this too; this just hides the controls.
+ */
+function canEditOrders() {
+    return document.getElementById("ordersTable").dataset.canEdit === "true";
+}
+
 /**
  * Retrieves orders from db and calls function to display them
  */
@@ -5,18 +16,26 @@ async function loadOrders() {
     try {
         const response = await fetch("/api/orders");
 
+        if (response.status === 401) {
+            window.location.href = "/";
+            return;
+        }
+
         if (!response.ok) {
             throw new Error("Failed to load orders");
         }
 
-        const orders = await response.json();
+        allOrders = await response.json();
 
-        displayOrders(orders)
+        updateTabCounts();
+        showSelectedOrders();
 
     } catch (error) {
         console.error("Error:", error);
         alert("Connection error. Unable to load orders.");
-        displayOrders([]);
+        allOrders = [];
+        updateTabCounts();
+        showSelectedOrders();
     }
 }
 
@@ -69,6 +88,48 @@ function isOrderExpired(createdAt) {
 }
 
 /**
+ * Updates the count badge on each status tab.
+ */
+function updateTabCounts() {
+    document.querySelectorAll(".status-tab").forEach(tab => {
+        const status = tab.dataset.status;
+        const count = status === "All"
+            ? allOrders.length
+            : allOrders.filter(order => order.status === status).length;
+
+        tab.querySelector(".tab-count").textContent = count;
+    });
+}
+
+/**
+ * Displays only the orders that match the selected status tab.
+ */
+function showSelectedOrders() {
+    const orders = selectedStatus === "All"
+        ? allOrders
+        : allOrders.filter(order => order.status === selectedStatus);
+
+    displayOrders(orders);
+}
+
+/**
+ * Marks the clicked tab as active and filters the table.
+ * @param {HTMLElement} tab
+ */
+function selectTab(tab) {
+    document.querySelectorAll(".status-tab").forEach(otherTab => {
+        otherTab.classList.remove("active");
+        otherTab.setAttribute("aria-selected", "false");
+    });
+
+    tab.classList.add("active");
+    tab.setAttribute("aria-selected", "true");
+
+    selectedStatus = tab.dataset.status;
+    showSelectedOrders();
+}
+
+/**
  * Creates table rows for each order in the db.
  * @param {*} orders 
  * @returns 
@@ -82,7 +143,7 @@ function displayOrders(orders) {
         const row = document.createElement("tr");
         const cell = document.createElement("td");
 
-        cell.colSpan = 8;
+        cell.colSpan = canEditOrders() ? 8 : 7;
         cell.textContent = "No orders found.";
 
         row.appendChild(cell);
@@ -108,6 +169,11 @@ function displayOrders(orders) {
             cell.textContent = value;
             row.appendChild(cell);
         });
+
+        if (!canEditOrders()) {
+            tableBody.appendChild(row);
+            return;
+        }
 
         const actionsCell = document.createElement("td");
 
@@ -135,4 +201,10 @@ function displayOrders(orders) {
 }
 
 
-document.addEventListener("DOMContentLoaded", loadOrders);
+document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll(".status-tab").forEach(tab => {
+        tab.addEventListener("click", () => selectTab(tab));
+    });
+
+    loadOrders();
+});

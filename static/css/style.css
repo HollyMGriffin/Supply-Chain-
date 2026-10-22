@@ -280,3 +280,51 @@ td button {
 .cancel-button:hover {
   background-color: #555;
 }
+
+/* STATUS TABS */
+
+.status-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #ddd;
+}
+
+.status-tab {
+  background-color: transparent;
+  color: #555;
+  font-size: 13px;
+  font-weight: bold;
+  padding: 10px 14px;
+  border-radius: 4px 4px 0 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+
+.status-tab:hover {
+  background-color: #eef3ff;
+  color: #244ba0;
+}
+
+.status-tab.active {
+  color: #244ba0;
+  background-color: #eef3ff;
+  border-bottom-color: #244ba0;
+}
+
+.tab-count {
+  display: inline-block;
+  min-width: 16px;
+  margin-left: 4px;
+  padding: 1px 5px;
+  border-radius: 10px;
+  background-color: #e4e7ec;
+  color: #555;
+  font-size: 11px;
+  text-align: center;
+}
+
+.status-tab.active .tab-count {
+  background-color: #244ba0;
+  color: white;
+}
