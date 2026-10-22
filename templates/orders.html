@@ -15,6 +15,24 @@
   <button>Search</button>
 </div>
 
+<div class="status-tabs" id="statusTabs" role="tablist">
+  <button class="status-tab active" data-status="All" role="tab" aria-selected="true">
+    All <span class="tab-count" id="countAll">0</span>
+  </button>
+  <button class="status-tab" data-status="Pending" role="tab" aria-selected="false">
+    Pending <span class="tab-count" id="countPending">0</span>
+  </button>
+  <button class="status-tab" data-status="In Transit" role="tab" aria-selected="false">
+    In Transit <span class="tab-count" id="countInTransit">0</span>
+  </button>
+  <button class="status-tab" data-status="Delivered" role="tab" aria-selected="false">
+    Delivered <span class="tab-count" id="countDelivered">0</span>
+  </button>
+  <button class="status-tab" data-status="Canceled" role="tab" aria-selected="false">
+    Cancelled <span class="tab-count" id="countCanceled">0</span>
+  </button>
+</div>
+
 <table id="ordersTable">
   <thead>
     <tr>
