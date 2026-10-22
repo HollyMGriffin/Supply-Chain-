@@ -1,5 +1,6 @@
 let allOrders = [];
 let selectedStatus = "All";
+let searchTerm = "";
 
 /**
  * Only the supply chain manager gets the Edit and Cancel buttons.
@@ -88,14 +89,51 @@ function isOrderExpired(createdAt) {
 }
 
 /**
+ * Checks if an order's number, material, or supplier contains the
+ * search text. An empty search matches every order.
+ * @param {*} order
+ * @returns {bool}
+ */
+function matchesSearch(order) {
+    if (searchTerm === "") {
+        return true;
+    }
+
+    return [order.id, order.material, order.supplier].some(value =>
+        String(value).toLowerCase().includes(searchTerm)
+    );
+}
+
+/**
+ * Returns the orders that match the current search text.
+ */
+function getSearchedOrders() {
+    return allOrders.filter(matchesSearch);
+}
+
+/**
+ * Saves the search box text and refreshes the tab counts and table.
+ */
+function searchOrders() {
+    searchTerm = document.getElementById("searchInput").value
+        .trim()
+        .toLowerCase();
+
+    updateTabCounts();
+    showSelectedOrders();
+}
+
+/**
  * Updates the count badge on each status tab.
  */
 function updateTabCounts() {
+    const orders = getSearchedOrders();
+
     document.querySelectorAll(".status-tab").forEach(tab => {
         const status = tab.dataset.status;
         const count = status === "All"
-            ? allOrders.length
-            : allOrders.filter(order => order.status === status).length;
+            ? orders.length
+            : orders.filter(order => order.status === status).length;
 
         tab.querySelector(".tab-count").textContent = count;
     });
@@ -105,9 +143,10 @@ function updateTabCounts() {
  * Displays only the orders that match the selected status tab.
  */
 function showSelectedOrders() {
+    const searchedOrders = getSearchedOrders();
     const orders = selectedStatus === "All"
-        ? allOrders
-        : allOrders.filter(order => order.status === selectedStatus);
+        ? searchedOrders
+        : searchedOrders.filter(order => order.status === selectedStatus);
 
     displayOrders(orders);
 }
@@ -144,7 +183,9 @@ function displayOrders(orders) {
         const cell = document.createElement("td");
 
         cell.colSpan = canEditOrders() ? 8 : 7;
-        cell.textContent = "No orders found.";
+        cell.textContent = searchTerm === ""
+            ? "No orders found."
+            : "No orders match your search.";
 
         row.appendChild(cell);
         tableBody.appendChild(row);
@@ -205,6 +246,18 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".status-tab").forEach(tab => {
         tab.addEventListener("click", () => selectTab(tab));
     });
+
+    const searchInput = document.getElementById("searchInput");
+
+    // Filter as the user types, and also on Enter or the Search button.
+    searchInput.addEventListener("input", searchOrders);
+    searchInput.addEventListener("keydown", event => {
+        if (event.key === "Enter") {
+            searchOrders();
+        }
+    });
+    document.getElementById("searchButton")
+        .addEventListener("click", searchOrders);
 
     loadOrders();
 });
