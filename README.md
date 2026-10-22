@@ -17,3 +17,13 @@ Flask workflow:
 4. db_repo handles db operations
 5. API endpoint returns response in JSON format
 6. Javascript processes response and updates webpage
+
+
+Logins (prototype only, passwords are stored in plaintext):
+- manager / 1234: Supply Chain Manager, sees every order and can add, edit and cancel
+- warehouse / 1234: Warehouse Manager, view only, sees In Transit and Delivered orders
+- employee / 1234: Employee, view only, sees Delivered orders
+
+Users are created in schema.sql. The app runs database setup on start, which also
+upgrades older databases to allow the 'In Transit' status.
+Roles and permissions are in auth.py.

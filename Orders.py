@@ -4,7 +4,7 @@ initialize_database()
 
 orders = [
     ("Steel Beams", 450, "Steeler Metals", 525000, "2026-10-25", "2026-10-30", "Pending"),
-    ("Copper Wiring", 1200, "CoopCooper", 360000, "2026-10-22", "2026-10-28", "Pending"),
+    ("Copper Wiring", 1200, "CoopCooper", 360000, "2026-10-22", "2026-10-28", "In Transit"),
     ("Pipes", 300, "Pipe Supply Co.", 150000, "2026-10-20", "2026-10-24", "Delivered"),
     ("Drywall", 200, "Wood Makers", 240000, "2026-11-02", "2026-11-08", "Pending"),
     ("Concrete", 100, "BuildItRight Org.", 85000, "2026-10-19", "2026-10-23", "Canceled")

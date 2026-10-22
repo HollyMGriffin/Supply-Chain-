@@ -6,6 +6,10 @@ from db.order_repository import (
     get_all_orders, get_order, add_order,
     update_order, cancel_order
 )
+from auth import (
+    login_required, edit_permission_required,
+    visible_statuses, can_view_order
+)
 
 orders_bp = Blueprint(
     "orders_api",
@@ -77,19 +81,22 @@ def validate_order(data, include_cost=False):
 
 
 @orders_bp.route("", methods=["GET"])
+@login_required
 def list_orders():
-    return jsonify(get_all_orders())
+    return jsonify(get_all_orders(visible_statuses()))
 
 
 @orders_bp.route("/<int:order_id>", methods=["GET"])
+@login_required
 def read_order(order_id):
     order = get_order(order_id)
-    if order is None:
+    if order is None or not can_view_order(order):
         return jsonify(error="Order not found."), 404
     return jsonify(order)
 
 
 @orders_bp.route("", methods=["POST"])
+@edit_permission_required
 def create_order():
     try:
         data = validate_order(request.get_json(silent=True), True)
@@ -106,6 +113,7 @@ def create_order():
 
 
 @orders_bp.route("/<int:order_id>", methods=["PUT"])
+@edit_permission_required
 def edit_order(order_id):
     order = get_order(order_id)
 
@@ -136,6 +144,7 @@ def edit_order(order_id):
 
 
 @orders_bp.route("/<int:order_id>/cancel", methods=["POST"])
+@edit_permission_required
 def cancel_existing_order(order_id):
     order = get_order(order_id)
 
@@ -149,7 +158,7 @@ def cancel_existing_order(order_id):
 
     if order["status"] != "Pending":
         return jsonify(
-            error="This order cannot be canceled because it is already delivered or canceled."
+            error="This order cannot be canceled because it is already in transit, delivered or canceled."
         ), 409
 
     try:

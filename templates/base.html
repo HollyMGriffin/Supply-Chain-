@@ -16,17 +16,17 @@
 
       <a href="/orders">Dashboard</a>
       <a href="/orders">Orders</a>
-      <a href="/">Log Out</a>
+      <a href="/logout">Log Out</a>
     </div>
 
     <div class="main">
       <div class="profile-bar">
         <div class="profile-text">
-          <strong>Manager</strong>
-          <span>Supply Chain Manager</span>
+          <strong>{{ user.display_name }}</strong>
+          <span>{{ user.role }}</span>
         </div>
 
-        <div class="profile-circle">M</div>
+        <div class="profile-circle">{{ user.display_name[0] | upper }}</div>
       </div>
       {% block content %}{% endblock %}
     </div>

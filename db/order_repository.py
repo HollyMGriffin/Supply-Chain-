@@ -2,12 +2,23 @@
 from database import get_connection
 
 
-def get_all_orders():
+def get_all_orders(statuses=None):
+    """
+    Returns all orders, or only the ones whose status is in statuses.
+    """
     connection = get_connection()
     try:
-        rows = connection.execute(
-            "SELECT * FROM orders ORDER BY id DESC"
-        ).fetchall()
+        if statuses is None:
+            rows = connection.execute(
+                "SELECT * FROM orders ORDER BY id DESC"
+            ).fetchall()
+        else:
+            placeholders = ", ".join("?" for _ in statuses)
+            rows = connection.execute(
+                f"SELECT * FROM orders WHERE status IN ({placeholders}) "
+                "ORDER BY id DESC",
+                tuple(statuses)
+            ).fetchall()
         return [dict(row) for row in rows]
     finally:
         connection.close()
