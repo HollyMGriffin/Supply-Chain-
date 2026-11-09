@@ -1,0 +1,44 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="inventory-page">
+
+    <h1>Warehouse Inventory</h1>
+    <p>View and manage materials currently stored in the warehouse.</p>
+
+    <div class="order-actions">
+        <a href="/inventory/new" class="btn-primary">
+            Add Inventory
+        </a>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Item #</th>
+            <th>Material</th>
+            <th>Quantity</th>
+            <th>Location</th>
+            <th>Cost per Unit</th>
+            <th>Total Value</th>
+            <th>Last Updated</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+
+        <tbody id="inventory-table">
+        <tr>
+            <td colspan="8">Loading inventory...</td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/inventory.js') }}"></script>
+{% endblock %}

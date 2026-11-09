@@ -41,6 +41,27 @@ CREATE TABLE IF NOT EXISTS users (
         )
 );
 
+
+-- Sprint 3: Warehouse Inventory
+
+CREATE TABLE IF NOT EXISTS inventory (
+                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                         material TEXT NOT NULL,
+                                         quantity INTEGER NOT NULL CHECK (quantity >= 0),
+                                         location TEXT NOT NULL,
+                                         updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE IF NOT EXISTS inventory (
+                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                         material TEXT NOT NULL,
+                                         quantity INTEGER NOT NULL CHECK (quantity >= 0),
+                                         location TEXT NOT NULL,
+                                         cost_cents INTEGER NOT NULL DEFAULT 0 CHECK (cost_cents >= 0),
+                                         updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
 INSERT OR IGNORE INTO users (username, password, display_name, role)
 VALUES
     ('manager', '1234', 'Manager', 'Supply Chain Manager'),

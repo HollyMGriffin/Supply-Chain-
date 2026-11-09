@@ -1,21 +1,26 @@
+
 import os
 from flask import Flask, redirect, render_template
 from auth import (
     current_user, login_required, edit_permission_required,
-    can_edit_orders, visible_statuses
+    inventory_permission_required, can_edit_orders, visible_statuses
 )
 from database import initialize_database
 from routes.auth import auth_bp
 from routes.orders import orders_bp
+from routes.inventory import inventory_bp
 
 
 
 
 app = Flask(__name__)
+
 # Set SECRET_KEY in the environment for anything beyond local testing.
 app.secret_key = os.environ.get("SECRET_KEY", "dev-only-change-me")
+
 app.register_blueprint(auth_bp)
 app.register_blueprint(orders_bp)
+app.register_blueprint(inventory_bp)
 
 initialize_database()
 
@@ -52,6 +57,27 @@ def orders_page():
     return render_template("orders.html")
 
 
+# Sprint 3: Warehouse Inventory page
+@app.route("/inventory")
+@inventory_permission_required
+def inventory_page():
+    return render_template("inventory.html")
+
+
+# Sprint 3: Add Inventory page
+@app.route("/inventory/new")
+@inventory_permission_required
+def add_inventory_page():
+    return render_template("add_inventory.html")
+
+# Edit an existing inventory item
+@app.route("/inventory/<int:item_id>/edit")
+@inventory_permission_required
+def edit_inventory_page(item_id):
+    return render_template("edit_inventory.html")
+
+
+
 @app.route("/orders/new")
 @edit_permission_required
 def add_order_page():
@@ -65,6 +91,7 @@ def edit_order_page(order_id):
         "edit_order.html",
         order_id=order_id
     )
+
 
 if __name__ == "__main__":
     app.run(debug=True)

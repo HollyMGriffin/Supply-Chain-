@@ -328,3 +328,34 @@ td button {
   background-color: #244ba0;
   color: white;
 }
+
+/* SPRINT 3: WAREHOUSE INVENTORY */
+
+.inventory-page {
+  display: block;
+}
+
+.inventory-page h1 {
+  margin-bottom: 10px;
+}
+
+.inventory-page p {
+  margin-bottom: 30px;
+}
+
+.inventory-page .order-actions {
+  margin-bottom: 20px;
+}
+
+.inventory-page .btn-primary {
+  display: inline-block;
+  background-color: #244ba0;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 4px;
+  text-decoration: none;
+}
+
+.inventory-page .btn-primary:hover {
+  background-color: #193777;
+}

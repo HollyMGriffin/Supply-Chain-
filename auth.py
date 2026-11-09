@@ -37,6 +37,10 @@ def can_view_order(order):
 def can_edit_orders():
     return session.get("role") == SUPPLY_CHAIN_MANAGER
 
+def can_manage_inventory():
+    return session.get("role") == WAREHOUSE_MANAGER
+
+
 
 def _is_api_request():
     return request.path.startswith("/api/")
@@ -71,6 +75,26 @@ def edit_permission_required(view):
                     error="You do not have permission to change orders."
                 ), 403
             return redirect("/orders")
+        return view(*args, **kwargs)
+
+    return wrapped
+
+
+
+def inventory_permission_required(view):
+    """
+    Only the Warehouse Manager can manage inventory.
+    """
+    @wraps(view)
+    @login_required
+    def wrapped(*args, **kwargs):
+        if not can_manage_inventory():
+            if _is_api_request():
+                return jsonify(
+                    error="You do not have permission to manage inventory."
+                ), 403
+            return redirect("/orders")
+
         return view(*args, **kwargs)
 
     return wrapped

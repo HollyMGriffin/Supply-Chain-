@@ -11,15 +11,22 @@
   </head>
 
   <body>
-    <div class="sidebar">
-      <h2>Inventory Tracker</h2>
 
-      <a href="/orders">Dashboard</a>
-      <a href="/orders">Orders</a>
-      <a href="/logout">Log Out</a>
-    </div>
+  <div class="sidebar">
+    <h2>Inventory Tracker</h2>
 
-    <div class="main">
+    <a href="/orders">Dashboard</a>
+    <a href="/orders">Orders</a>
+
+    {% if user.role == "Warehouse Manager" %}
+    <a href="/inventory">Inventory</a>
+    {% endif %}
+
+    <a href="/logout">Log Out</a>
+  </div>
+
+
+  <div class="main">
       <div class="profile-bar">
         <div class="profile-text">
           <strong>{{ user.display_name }}</strong>
