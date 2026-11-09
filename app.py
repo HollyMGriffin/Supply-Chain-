@@ -8,6 +8,9 @@ from database import initialize_database
 from routes.auth import auth_bp
 from routes.orders import orders_bp
 
+
+
+
 app = Flask(__name__)
 # Set SECRET_KEY in the environment for anything beyond local testing.
 app.secret_key = os.environ.get("SECRET_KEY", "dev-only-change-me")
@@ -25,6 +28,15 @@ def inject_user():
         "can_edit": can_edit_orders(),
         "visible_statuses": list(statuses) if statuses is not None else None
     }
+
+# fixing the security headers to prevent clickjacking and other attacks
+@app.after_request
+def set_security_headers(resp):
+    resp.headers["Content-Security-Policy"] = "default-src 'self'; frame-ancestors 'none'"
+    resp.headers["X-Frame-Options"] = "DENY"
+    resp.headers["X-Content-Type-Options"] = "nosniff"
+    resp.headers["Server"] = "webserver"
+    return resp
 
 
 @app.route("/")
