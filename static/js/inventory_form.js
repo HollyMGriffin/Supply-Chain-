@@ -4,6 +4,13 @@
 const inventoryForm = document.getElementById("inventory-form");
 const inventoryError = document.getElementById("inventory-error");
 
+// Wired up here instead of with onclick, because the
+// Content-Security-Policy header blocks inline event handlers.
+document.getElementById("cancelInventoryButton")
+    .addEventListener("click", () => {
+        window.location.href = "/inventory";
+    });
+
 inventoryForm.addEventListener("submit", async function(event) {
     event.preventDefault();
 

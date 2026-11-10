@@ -259,5 +259,13 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("searchButton")
         .addEventListener("click", searchOrders);
 
+    // Only shown to the supply chain manager.
+    const addOrderButton = document.getElementById("addOrderButton");
+    if (addOrderButton) {
+        addOrderButton.addEventListener("click", () => {
+            window.location.href = "/orders/new";
+        });
+    }
+
     loadOrders();
 });

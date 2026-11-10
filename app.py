@@ -3,12 +3,16 @@ import os
 from flask import Flask, redirect, render_template
 from auth import (
     current_user, login_required, edit_permission_required,
-    inventory_permission_required, can_edit_orders, visible_statuses
+    inventory_permission_required, inventory_view_required,
+    admin_required, is_admin,
+    can_edit_orders, can_manage_inventory, can_view_inventory,
+    visible_statuses
 )
 from database import initialize_database
 from routes.auth import auth_bp
 from routes.orders import orders_bp
 from routes.inventory import inventory_bp
+from routes.users import users_bp
 
 
 
@@ -21,6 +25,7 @@ app.secret_key = os.environ.get("SECRET_KEY", "dev-only-change-me")
 app.register_blueprint(auth_bp)
 app.register_blueprint(orders_bp)
 app.register_blueprint(inventory_bp)
+app.register_blueprint(users_bp)
 
 initialize_database()
 
@@ -31,6 +36,9 @@ def inject_user():
     return {
         "user": current_user(),
         "can_edit": can_edit_orders(),
+        "can_view_inventory": can_view_inventory(),
+        "can_manage_inventory": can_manage_inventory(),
+        "is_admin": is_admin(),
         "visible_statuses": list(statuses) if statuses is not None else None
     }
 
@@ -59,7 +67,7 @@ def orders_page():
 
 # Sprint 3: Warehouse Inventory page
 @app.route("/inventory")
-@inventory_permission_required
+@inventory_view_required
 def inventory_page():
     return render_template("inventory.html")
 
@@ -76,6 +84,20 @@ def add_inventory_page():
 def edit_inventory_page(item_id):
     return render_template("edit_inventory.html")
 
+
+
+# Admin: create accounts
+@app.route("/users")
+@admin_required
+def users_page():
+    return render_template("users.html")
+
+
+# Any logged-in user can change their own password
+@app.route("/account/password")
+@login_required
+def change_password_page():
+    return render_template("change_password.html")
 
 
 @app.route("/orders/new")

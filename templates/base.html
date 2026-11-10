@@ -18,10 +18,15 @@
     <a href="/orders">Dashboard</a>
     <a href="/orders">Orders</a>
 
-    {% if user.role == "Warehouse Manager" %}
+    {% if can_view_inventory %}
     <a href="/inventory">Inventory</a>
     {% endif %}
 
+    {% if is_admin %}
+    <a href="/users">Accounts</a>
+    {% endif %}
+
+    <a href="/account/password">Change Password</a>
     <a href="/logout">Log Out</a>
   </div>
 

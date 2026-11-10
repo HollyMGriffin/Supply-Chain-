@@ -27,13 +27,14 @@ CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
 
     username TEXT NOT NULL UNIQUE,
-    -- Plaintext for the prototype only. Hash before real use.
-    password TEXT NOT NULL,
+    -- Salted PBKDF2-SHA256 hash, made by passwords.hash_password.
+    password_hash TEXT NOT NULL,
     display_name TEXT NOT NULL,
 
     role TEXT NOT NULL
         CHECK (
             role IN (
+                'Admin',
                 'Supply Chain Manager',
                 'Warehouse Manager',
                 'Employee'
@@ -49,21 +50,6 @@ CREATE TABLE IF NOT EXISTS inventory (
                                          material TEXT NOT NULL,
                                          quantity INTEGER NOT NULL CHECK (quantity >= 0),
                                          location TEXT NOT NULL,
-                                         updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-
-
-CREATE TABLE IF NOT EXISTS inventory (
-                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
-                                         material TEXT NOT NULL,
-                                         quantity INTEGER NOT NULL CHECK (quantity >= 0),
-                                         location TEXT NOT NULL,
                                          cost_cents INTEGER NOT NULL DEFAULT 0 CHECK (cost_cents >= 0),
                                          updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
-
-INSERT OR IGNORE INTO users (username, password, display_name, role)
-VALUES
-    ('manager', '1234', 'Manager', 'Supply Chain Manager'),
-    ('warehouse', '1234', 'Warehouse', 'Warehouse Manager'),
-    ('employee', '1234', 'Employee', 'Employee');

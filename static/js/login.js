@@ -21,3 +21,15 @@ async function login() {
     alert("Connection error. Unable to log in.");
   }
 }
+
+// Buttons are wired up here instead of with onclick, because the
+// Content-Security-Policy header blocks inline event handlers.
+document.getElementById("signInButton").addEventListener("click", login);
+
+["username", "password"].forEach(id => {
+  document.getElementById(id).addEventListener("keydown", event => {
+    if (event.key === "Enter") {
+      login();
+    }
+  });
+});

@@ -1,0 +1,54 @@
+{% extends "base.html" %} {% block content %}
+
+<h1>Accounts</h1>
+<p>Create accounts for people who use the inventory tracker.</p>
+
+<div class="order-form">
+  <h3>New Account</h3>
+
+  <form id="userForm">
+    <label for="newUsername">Username</label>
+    <input type="text" id="newUsername" autocomplete="off" required />
+
+    <label for="newDisplayName">Display Name (optional)</label>
+    <input type="text" id="newDisplayName" autocomplete="off" />
+
+    <label for="newPassword">Password</label>
+    <input type="password" id="newPassword" autocomplete="new-password" required />
+
+    <label for="newRole">Role</label>
+    <select id="newRole" required>
+      <option value="">Choose a role</option>
+      <option>Supply Chain Manager</option>
+      <option>Warehouse Manager</option>
+      <option>Employee</option>
+      <option>Admin</option>
+    </select>
+
+    <p id="userError" class="form-error"></p>
+    <p id="userMessage" class="form-success"></p>
+
+    <div class="form-buttons">
+      <button type="submit">Create Account</button>
+    </div>
+  </form>
+</div>
+
+<h3 class="section-heading">Existing Accounts</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Username</th>
+      <th>Display Name</th>
+      <th>Role</th>
+    </tr>
+  </thead>
+
+  <tbody id="usersTableBody">
+  </tbody>
+</table>
+
+{% endblock %}{% block scripts %}
+<script src="{{ url_for('static', filename='js/users.js') }}"></script>
+{% endblock %}

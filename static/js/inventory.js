@@ -1,6 +1,19 @@
 
 // Sprint 3: Warehouse Inventory
 
+// Only the Warehouse Manager gets the Edit and Delete buttons.
+// The server enforces this too; this just hides the controls.
+function canManageInventory() {
+    return document.getElementById("inventoryTable")
+        .dataset.canManage === "true";
+}
+
+// Number of table columns, used for full-width message rows
+function columnCount() {
+    return canManageInventory() ? 8 : 7;
+}
+
+
 // Format cents as dollars
 function formatMoney(cents) {
     return (cents / 100).toLocaleString("en-US", {
@@ -31,7 +44,7 @@ async function loadInventory() {
             const row = document.createElement("tr");
             const cell = document.createElement("td");
 
-            cell.colSpan = 8;
+            cell.colSpan = columnCount();
             cell.textContent = "No inventory items found.";
 
             row.appendChild(cell);
@@ -62,6 +75,11 @@ async function loadInventory() {
                 row.appendChild(cell);
             });
 
+            if (!canManageInventory()) {
+                table.appendChild(row);
+                return;
+            }
+
             // Edit button
             const actions = document.createElement("td");
 
@@ -91,7 +109,7 @@ async function loadInventory() {
         const row = document.createElement("tr");
         const cell = document.createElement("td");
 
-        cell.colSpan = 8;
+        cell.colSpan = columnCount();
         cell.textContent = error.message;
 
         row.appendChild(cell);

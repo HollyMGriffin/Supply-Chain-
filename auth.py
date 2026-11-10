@@ -1,12 +1,14 @@
 from functools import wraps
 from flask import jsonify, redirect, request, session
 
+ADMIN = "Admin"
 SUPPLY_CHAIN_MANAGER = "Supply Chain Manager"
 WAREHOUSE_MANAGER = "Warehouse Manager"
 EMPLOYEE = "Employee"
 
 # Order statuses each role is allowed to see. None means every status.
 VISIBLE_STATUSES = {
+    ADMIN: None,
     SUPPLY_CHAIN_MANAGER: None,
     WAREHOUSE_MANAGER: ("In Transit", "Delivered"),
     EMPLOYEE: ("Delivered",)
@@ -39,6 +41,16 @@ def can_edit_orders():
 
 def can_manage_inventory():
     return session.get("role") == WAREHOUSE_MANAGER
+
+
+def can_view_inventory():
+    return session.get("role") in (
+        ADMIN, WAREHOUSE_MANAGER, SUPPLY_CHAIN_MANAGER
+    )
+
+
+def is_admin():
+    return session.get("role") == ADMIN
 
 
 
@@ -81,6 +93,25 @@ def edit_permission_required(view):
 
 
 
+def inventory_view_required(view):
+    """
+    The Admin, Warehouse Manager and Supply Chain Manager can view inventory.
+    """
+    @wraps(view)
+    @login_required
+    def wrapped(*args, **kwargs):
+        if not can_view_inventory():
+            if _is_api_request():
+                return jsonify(
+                    error="You do not have permission to view inventory."
+                ), 403
+            return redirect("/orders")
+
+        return view(*args, **kwargs)
+
+    return wrapped
+
+
 def inventory_permission_required(view):
     """
     Only the Warehouse Manager can manage inventory.
@@ -92,6 +123,25 @@ def inventory_permission_required(view):
             if _is_api_request():
                 return jsonify(
                     error="You do not have permission to manage inventory."
+                ), 403
+            return redirect("/orders")
+
+        return view(*args, **kwargs)
+
+    return wrapped
+
+
+def admin_required(view):
+    """
+    Only the Admin can create accounts.
+    """
+    @wraps(view)
+    @login_required
+    def wrapped(*args, **kwargs):
+        if not is_admin():
+            if _is_api_request():
+                return jsonify(
+                    error="You do not have permission to manage accounts."
                 ), 403
             return redirect("/orders")
 

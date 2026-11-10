@@ -19,11 +19,22 @@ Flask workflow:
 6. Javascript processes response and updates webpage
 
 
-Logins (prototype only, passwords are stored in plaintext):
-- manager / 1234: Supply Chain Manager, sees every order and can add, edit and cancel
-- warehouse / 1234: Warehouse Manager, view only, sees In Transit and Delivered orders
-- employee / 1234: Employee, view only, sees Delivered orders
+Logins:
+The database starts with one admin account. Log in with it, change its
+password right away (Change Password in the sidebar), then create the
+other accounts from the Accounts page.
+- Username: admin
+- Password: ChangeMe123
 
-Users are created in schema.sql. The app runs database setup on start, which also
-upgrades older databases to allow the 'In Transit' status.
+Roles:
+- Admin: creates accounts, views all orders and inventory, cannot change them
+- Supply Chain Manager: sees every order and can add, edit and cancel; views inventory
+- Warehouse Manager: sees In Transit and Delivered orders; adds, edits and deletes inventory
+- Employee: view only, sees Delivered orders
+
+Passwords are salted and hashed with PBKDF2-SHA256 (passwords.py) before
+they are stored. Every user can change their own password.
+The app runs database setup on start. supply_chain.db is not kept in Git;
+each person's copy is created the first time they run the app. If you have an
+old supply_chain.db from before accounts were hashed, delete it and restart.
 Roles and permissions are in auth.py.

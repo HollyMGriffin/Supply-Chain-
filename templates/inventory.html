@@ -8,13 +8,16 @@
     <h1>Warehouse Inventory</h1>
     <p>View and manage materials currently stored in the warehouse.</p>
 
+    {% if can_manage_inventory %}
     <div class="order-actions">
         <a href="/inventory/new" class="btn-primary">
             Add Inventory
         </a>
     </div>
+    {% endif %}
 
-    <table>
+    <table id="inventoryTable"
+           data-can-manage="{{ 'true' if can_manage_inventory else 'false' }}">
         <thead>
         <tr>
             <th>Item #</th>
@@ -24,13 +27,15 @@
             <th>Cost per Unit</th>
             <th>Total Value</th>
             <th>Last Updated</th>
+            {% if can_manage_inventory %}
             <th>Actions</th>
+            {% endif %}
         </tr>
         </thead>
 
         <tbody id="inventory-table">
         <tr>
-            <td colspan="8">Loading inventory...</td>
+            <td colspan="{{ 8 if can_manage_inventory else 7 }}">Loading inventory...</td>
         </tr>
         </tbody>
     </table>

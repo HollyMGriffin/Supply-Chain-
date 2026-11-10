@@ -2,7 +2,7 @@
 from decimal import Decimal, InvalidOperation
 
 from flask import Blueprint, jsonify, request
-from auth import login_required, inventory_permission_required
+from auth import inventory_view_required, inventory_permission_required
 from db.inventory_repository import (
     get_all_inventory,
     get_inventory_item,
@@ -72,14 +72,14 @@ def validate_inventory(data):
 
 # View all inventory items
 @inventory_bp.route("/api/inventory", methods=["GET"])
-@login_required
+@inventory_view_required
 def list_inventory():
     return jsonify(get_all_inventory())
 
 
 # View one inventory item
 @inventory_bp.route("/api/inventory/<int:item_id>", methods=["GET"])
-@login_required
+@inventory_view_required
 def view_inventory(item_id):
     item = get_inventory_item(item_id)
 

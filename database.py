@@ -1,10 +1,19 @@
 import sqlite3
 from pathlib import Path
 
+from passwords import hash_password
+
 BASE_DIR = Path(__file__).resolve().parent
 
 DATABASE_PATH = BASE_DIR / "supply_chain.db"
 SCHEMA_PATH = BASE_DIR / "schema.sql"
+
+# The starting admin account, created only when the database has no
+# accounts at all, such as the first time the app runs. Existing
+# accounts are never changed. Log in with these and change the
+# password straight away.
+DEFAULT_ADMIN_USERNAME = "admin"
+DEFAULT_ADMIN_PASSWORD = "ChangeMe123"
 
 def get_connection():
     connection = sqlite3.connect(DATABASE_PATH)
@@ -14,12 +23,17 @@ def get_connection():
     return connection
 
 
-def orders_table_needs_in_transit(connection):
-    row = connection.execute(
-        "SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'orders'"
-    ).fetchone()
+def create_default_admin(connection):
+    account = connection.execute("SELECT id FROM users LIMIT 1").fetchone()
 
-    return row is not None and "In Transit" not in row["sql"]
+    if account is None:
+        connection.execute(
+            """
+            INSERT INTO users (username, password_hash, display_name, role)
+            VALUES (?, ?, 'Admin', 'Admin')
+            """,
+            (DEFAULT_ADMIN_USERNAME, hash_password(DEFAULT_ADMIN_PASSWORD))
+        )
 
 
 def initialize_database():
@@ -27,22 +41,9 @@ def initialize_database():
 
     try:
         with open(SCHEMA_PATH, "r", encoding="utf-8") as file:
-            schema = file.read()
+            connection.executescript(file.read())
 
-        # Older databases were created before the 'In Transit' status
-        # existed. SQLite can't change a CHECK constraint in place, so
-        # rebuild the orders table and copy the existing rows across.
-        if orders_table_needs_in_transit(connection):
-            connection.executescript(
-                "BEGIN;"
-                "ALTER TABLE orders RENAME TO orders_old;"
-                + schema +
-                "INSERT INTO orders SELECT * FROM orders_old;"
-                "DROP TABLE orders_old;"
-                "COMMIT;"
-            )
-        else:
-            connection.executescript(schema)
+        create_default_admin(connection)
 
         connection.commit()
     finally:

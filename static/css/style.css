@@ -359,3 +359,27 @@ td button {
 .inventory-page .btn-primary:hover {
   background-color: #193777;
 }
+
+/* FORM ERRORS */
+
+.form-error {
+  color: red;
+}
+
+.form-success {
+  color: green;
+}
+
+/* ACCOUNTS PAGE */
+
+.order-form select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: white;
+}
+
+.section-heading {
+  margin-top: 40px;
+}

@@ -130,4 +130,22 @@ async function saveChanges() {
   }
 }
 
-document.addEventListener("DOMContentLoaded", loadEditOrder);
+// Buttons are wired up here instead of with onclick, because the
+// Content-Security-Policy header blocks inline event handlers.
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("cancelOrderButton").addEventListener("click", () => {
+    window.location.href = "/orders";
+  });
+
+  const saveOrderButton = document.getElementById("saveOrderButton");
+  if (saveOrderButton) {
+    saveOrderButton.addEventListener("click", saveOrder);
+  }
+
+  const saveChangesButton = document.getElementById("saveChangesButton");
+  if (saveChangesButton) {
+    saveChangesButton.addEventListener("click", saveChanges);
+  }
+
+  loadEditOrder();
+});
