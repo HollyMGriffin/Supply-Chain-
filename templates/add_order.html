@@ -7,16 +7,11 @@
   <h3>Order Specifications</h3>
 
   <label>Material</label>
-  <input type="text" id="material" placeholder="Enter material" />
+  <select id="material" required><option value="">Loading warehouse inventory...</option></select>
+  <p id="stockInfo" aria-live="polite"></p>
 
   <label>Quantity</label>
   <input type="number" id="quantity" placeholder="Enter quantity" />
-
-  <label>Supplier</label>
-  <input type="text" id="supplier" placeholder="Enter supplier" />
-
-  <label>Cost</label>
-  <input type="number" id="cost" placeholder="Enter cost" />
 
   <label>Estimated Arrival Date</label>
   <input type="date" id="arrival" />

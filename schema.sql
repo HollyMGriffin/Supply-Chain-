@@ -2,6 +2,7 @@ CREATE TABLE IF NOT EXISTS orders (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
 
     material TEXT NOT NULL,
+    inventory_id INTEGER NOT NULL REFERENCES inventory(id),
     quantity INTEGER NOT NULL CHECK (quantity > 0),
     supplier TEXT NOT NULL,
     cost_cents INTEGER NOT NULL
@@ -48,6 +49,7 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS inventory (
                                          id INTEGER PRIMARY KEY AUTOINCREMENT,
                                          material TEXT NOT NULL,
+                                         supplier TEXT NOT NULL DEFAULT '',
                                          quantity INTEGER NOT NULL CHECK (quantity >= 0),
                                          location TEXT NOT NULL,
                                          cost_cents INTEGER NOT NULL DEFAULT 0 CHECK (cost_cents >= 0),

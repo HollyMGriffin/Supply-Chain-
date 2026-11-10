@@ -129,7 +129,10 @@ def edit_inventory(item_id):
 @inventory_bp.route("/api/inventory/<int:item_id>", methods=["DELETE"])
 @inventory_permission_required
 def remove_inventory(item_id):
-    deleted = delete_inventory(item_id)
+    try:
+        deleted = delete_inventory(item_id)
+    except ValueError as error:
+        return jsonify(error=str(error)), 409
 
     if not deleted:
         return jsonify(error="Inventory item not found."), 404

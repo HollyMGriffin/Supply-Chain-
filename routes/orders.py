@@ -1,6 +1,5 @@
 
 from datetime import date, datetime, timezone
-from decimal import Decimal, InvalidOperation
 from flask import Blueprint, jsonify, request
 from db.order_repository import (
     get_all_orders, get_order, add_order,
@@ -25,15 +24,18 @@ def is_order_expired(order):
         datetime.now(timezone.utc) - created
     ).total_seconds() >= 24 * 60 * 60
 
-def validate_order(data, include_cost=False):
+def validate_order(data):
     if not isinstance(data, dict):
         raise ValueError("Invalid order information.")
 
-    material = str(data.get("material") or "").strip()
-    supplier = str(data.get("supplier") or "").strip()
-
-    if not material or not supplier:
-        raise ValueError("Please enter a material and supplier.")
+    inventory_id = data.get("inventory_id")
+    if (
+        isinstance(inventory_id, bool)
+        or not str(inventory_id).isdigit()
+        or int(inventory_id) <= 0
+    ):
+        raise ValueError("Please select an available inventory item.")
+    inventory_id = int(inventory_id)
 
     try:
         quantity = int(data.get("quantity"))
@@ -58,24 +60,11 @@ def validate_order(data, include_cost=False):
         raise ValueError("Please enter valid dates.")
 
     result = {
-        "material": material,
+        "inventory_id": inventory_id,
         "quantity": quantity,
-        "supplier": supplier,
         "expected_arrival": arrival,
         "required_by_date": required
     }
-
-    if include_cost:
-        try:
-            cost = Decimal(str(data.get("cost")))
-            if not cost.is_finite() or cost < 0:
-                raise ValueError()
-            cents = cost * 100
-            if cents != cents.to_integral_value():
-                raise ValueError()
-            result["cost_cents"] = int(cents)
-        except (InvalidOperation, ValueError, TypeError):
-            raise ValueError("Please enter a valid cost.")
 
     return result
 
@@ -99,7 +88,7 @@ def read_order(order_id):
 @edit_permission_required
 def create_order():
     try:
-        data = validate_order(request.get_json(silent=True), True)
+        data = validate_order(request.get_json(silent=True))
         order_id = add_order(data)
         return jsonify(
             message="Order successfully added!",

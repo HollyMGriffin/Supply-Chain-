@@ -1,14 +1,38 @@
+let inventoryItems = [];
+let editingOrder = null;
+
+async function loadInventoryOptions(selectId, selectedId = null) {
+  const response = await fetch("/api/inventory");
+  if (!response.ok) throw new Error("Could not load warehouse inventory.");
+  inventoryItems = await response.json();
+  const select = document.getElementById(selectId);
+  select.replaceChildren(new Option("Select warehouse material", ""));
+  for (const item of inventoryItems) {
+    if (item.quantity > 0 || item.id === Number(selectedId)) {
+      const current = editingOrder && editingOrder.inventory_id === item.id ? editingOrder.quantity : 0;
+      select.add(new Option(`${item.material} — ${item.location} (${item.quantity + current} available)`, String(item.id)));
+    }
+  }
+  if (selectedId != null) select.value = String(selectedId);
+  const info = document.getElementById(selectId === "material" ? "stockInfo" : "editStockInfo");
+  const showStock = () => {
+    const item = inventoryItems.find(x => x.id === Number(select.value));
+    const own = editingOrder && editingOrder.inventory_id === item?.id ? editingOrder.quantity : 0;
+    info.textContent = item ? `${item.quantity + own} units available` : "";
+  };
+  select.addEventListener("change", showStock);
+  showStock();
+}
+
 
 async function saveOrder() {
-  const material = document.getElementById("material").value.trim();
+  const inventory_id = Number(document.getElementById("material").value);
+  const material = inventoryItems.find(item => item.id === inventory_id)?.material || "";
   const quantity = document.getElementById("quantity").value;
-  const supplier = document.getElementById("supplier").value.trim();
-  const cost = document.getElementById("cost").value;
   const arrival = document.getElementById("arrival").value;
   const required = document.getElementById("required").value;
 
-  if (!material || !supplier || quantity === "" ||
-      cost === "" || !arrival || !required) {
+  if (!material || quantity === "" || !arrival || !required) {
     alert("Please fill out all order information.");
     return;
   }
@@ -18,16 +42,10 @@ async function saveOrder() {
     return;
   }
 
-  if (!Number.isFinite(Number(cost)) || Number(cost) < 0) {
-    alert("Please enter a valid cost.");
-    return;
-  }
-
   const data = {
     material: material,
+    inventory_id: inventory_id,
     quantity: Number(quantity),
-    supplier: supplier,
-    cost: cost,
     expected_arrival: arrival,
     required_by_date: required
   };
@@ -69,9 +87,9 @@ async function loadEditOrder() {
       return;
     }
 
-    document.getElementById("editMaterial").value = order.material;
+    editingOrder = order;
+    await loadInventoryOptions("editMaterial", order.inventory_id);
     document.getElementById("editQuantity").value = order.quantity;
-    document.getElementById("editSupplier").value = order.supplier;
     document.getElementById("editArrival").value = order.expected_arrival;
     document.getElementById("editRequired").value = order.required_by_date;
   } catch (error) {
@@ -84,14 +102,13 @@ async function saveChanges() {
   const form = document.getElementById("editOrderForm");
   const orderId = form.dataset.orderId;
 
-  const material = document.getElementById("editMaterial").value.trim();
+  const inventory_id = Number(document.getElementById("editMaterial").value);
+  const material = inventoryItems.find(item => item.id === inventory_id)?.material || "";
   const quantity = document.getElementById("editQuantity").value;
-  const supplier = document.getElementById("editSupplier").value.trim();
   const arrival = document.getElementById("editArrival").value;
   const required = document.getElementById("editRequired").value;
 
-  if (!material || !supplier || quantity === "" ||
-      !arrival || !required) {
+  if (!material || quantity === "" || !arrival || !required) {
     alert("Please fill out all order information.");
     return;
   }
@@ -103,8 +120,8 @@ async function saveChanges() {
 
   const data = {
     material: material,
+    inventory_id: inventory_id,
     quantity: Number(quantity),
-    supplier: supplier,
     expected_arrival: arrival,
     required_by_date: required
   };
@@ -147,5 +164,8 @@ document.addEventListener("DOMContentLoaded", () => {
     saveChangesButton.addEventListener("click", saveChanges);
   }
 
+  if (saveOrderButton) {
+    loadInventoryOptions("material").catch(error => alert(error.message));
+  }
   loadEditOrder();
 });

@@ -94,6 +94,11 @@ def delete_inventory(item_id):
     connection = get_connection()
 
     try:
+        linked = connection.execute(
+            "SELECT 1 FROM orders WHERE inventory_id = ? LIMIT 1", (item_id,)
+        ).fetchone()
+        if linked:
+            raise ValueError("Cannot delete inventory linked to an order.")
         cursor = connection.execute(
             "DELETE FROM inventory WHERE id = ?",
             (item_id,)
