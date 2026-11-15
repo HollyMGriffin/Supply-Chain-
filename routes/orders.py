@@ -28,6 +28,13 @@ def validate_order(data):
     if not isinstance(data, dict):
         raise ValueError("Invalid order information.")
 
+        # Reject HTML tags in user input
+        if "<" in material or ">" in material:
+            return None, "Material cannot contain HTML tags."
+
+        if "<" in supplier or ">" in supplier:
+            return None, "Supplier cannot contain HTML tags."
+
     inventory_id = data.get("inventory_id")
     if (
         isinstance(inventory_id, bool)

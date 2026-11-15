@@ -21,6 +21,13 @@ def validate_inventory(data):
     quantity = data.get("quantity")
     cost = data.get("cost")
 
+    # Reject HTML tags in inventory input
+    if "<" in material or ">" in material:
+        return None, "Material cannot contain HTML tags."
+
+    if "<" in location or ">" in location:
+        return None, "Location cannot contain HTML tags."
+
     if not material:
         return None, "Material is required."
 
