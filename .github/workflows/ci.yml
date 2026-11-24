@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      - name: Build check (compile every Python file)
+        run: python -m compileall -q .
+
+      - name: Smoke test (create the database and load the app)
+        env:
+          SECRET_KEY: ci-only-not-a-real-secret
+        run: |
+          python database.py
+          python -c "import app; print('App loaded with', len(list(app.app.url_map.iter_rules())), 'routes')"
+
+      - name: Run tests
+        run: python -m pytest -v

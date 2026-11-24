@@ -36,3 +36,6 @@ __pycache__/
 
 ### SQLite ###
 supply_chain.db
+
+### Pytest ###
+.pytest_cache/

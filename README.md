@@ -1,4 +1,4 @@
-Installing flask: python -m pip install flask
+Installing requirements: python -m pip install -r requirements.txt
 
 Creating DB: python database.py
 
@@ -38,3 +38,12 @@ The app runs database setup on start. supply_chain.db is not kept in Git;
 each person's copy is created the first time they run the app. If you have an
 old supply_chain.db from before accounts were hashed, delete it and restart.
 Roles and permissions are in auth.py.
+
+
+Running tests:
+python -m pip install -r requirements-dev.txt
+python -m pytest
+
+Tests use a temporary database, so they never touch supply_chain.db.
+GitHub Actions runs the same tests on every push and pull request
+(.github/workflows/ci.yml).
