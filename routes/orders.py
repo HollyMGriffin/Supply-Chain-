@@ -3,10 +3,10 @@ from datetime import date, datetime, timezone
 from flask import Blueprint, jsonify, request
 from db.order_repository import (
     get_all_orders, get_order, add_order,
-    update_order, cancel_order
+    update_order, cancel_order, request_order, ship_order
 )
 from auth import (
-    login_required, edit_permission_required,
+    login_required, edit_permission_required, ship_permission_required,
     visible_statuses, can_view_order
 )
 
@@ -167,3 +167,39 @@ def cancel_existing_order(order_id):
         return jsonify(error="Unable to cancel order."), 500
 
 
+@orders_bp.route("/<int:order_id>/request", methods=["POST"])
+@edit_permission_required
+def request_existing_order(order_id):
+    order = get_order(order_id)
+
+    if order is None:
+        return jsonify(error="Order not found."), 404
+
+    if order["status"] != "Pending":
+        return jsonify(error="Only pending orders can be requested."), 409
+
+    if not request_order(order_id):
+        return jsonify(error="Order can no longer be requested."), 409
+
+    return jsonify(
+        message="Order requested! The warehouse manager has been notified."
+    )
+
+
+@orders_bp.route("/<int:order_id>/ship", methods=["POST"])
+@ship_permission_required
+def ship_existing_order(order_id):
+    order = get_order(order_id)
+
+    if order is None:
+        return jsonify(error="Order not found."), 404
+
+    if order["status"] != "Requested":
+        return jsonify(
+            error="Only requested orders can be marked in transit."
+        ), 409
+
+    if not ship_order(order_id):
+        return jsonify(error="Order can no longer be marked in transit."), 409
+
+    return jsonify(message="Order marked as in transit!")

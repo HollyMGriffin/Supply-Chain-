@@ -40,6 +40,30 @@
 
         <div class="profile-circle">{{ user.display_name[0] | upper }}</div>
       </div>
+      {% if requested_count %}
+      <a class="notice" href="/orders#Requested">
+        {{ requested_count }} order{{ "s" if requested_count != 1 }}
+        requested by the Supply Chain Manager
+        {{ "are" if requested_count != 1 else "is" }} waiting to be marked in transit.
+      </a>
+      {% endif %}
+      {% if arrival_warnings %}
+      <div class="notice notice-warning">
+        <strong>
+          {{ arrival_warnings | length }} order{{ "s" if arrival_warnings | length != 1 }}
+          will arrive within {{ arrival_warning_days }} days of the project start date or later:
+        </strong>
+        <ul>
+          {% for order in arrival_warnings %}
+          <li>
+            Order #{{ order.id }} ({{ order.material }}, {{ order.status }}):
+            arrives {{ order.expected_arrival }}, project starts {{ order.required_by_date }}
+            {%- if order.late %} <span class="late-tag">LATE</span>{% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
       {% block content %}{% endblock %}
     </div>
     {% block scripts %}{% endblock %}

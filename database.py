@@ -36,6 +36,47 @@ def create_default_admin(connection):
         )
 
 
+def add_missing_columns(connection):
+    # CREATE TABLE IF NOT EXISTS leaves older databases as they were,
+    # so add newer columns here.
+    columns = {
+        row["name"]
+        for row in connection.execute("PRAGMA table_info(orders)")
+    }
+
+    if "arrival_rolled_on" not in columns:
+        connection.execute(
+            "ALTER TABLE orders ADD COLUMN arrival_rolled_on TEXT"
+        )
+
+
+def add_requested_status(connection):
+    # SQLite can't change a CHECK rule in place, so an orders table made
+    # before the Requested status existed is rebuilt with the new rule.
+    row = connection.execute(
+        "SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'orders'"
+    ).fetchone()
+
+    if row is None or "'Requested'" in row["sql"]:
+        return
+
+    columns = [
+        column["name"]
+        for column in connection.execute("PRAGMA table_info(orders)")
+    ]
+    column_list = ", ".join(columns)
+
+    connection.execute("ALTER TABLE orders RENAME TO orders_old")
+
+    with open(SCHEMA_PATH, "r", encoding="utf-8") as file:
+        connection.executescript(file.read())
+
+    connection.execute(
+        f"INSERT INTO orders ({column_list}) SELECT {column_list} FROM orders_old"
+    )
+    connection.execute("DROP TABLE orders_old")
+
+
 def initialize_database():
     connection = get_connection()
 
@@ -43,6 +84,8 @@ def initialize_database():
         with open(SCHEMA_PATH, "r", encoding="utf-8") as file:
             connection.executescript(file.read())
 
+        add_missing_columns(connection)
+        add_requested_status(connection)
         create_default_admin(connection)
 
         connection.commit()

@@ -10,7 +10,7 @@ EMPLOYEE = "Employee"
 VISIBLE_STATUSES = {
     ADMIN: None,
     SUPPLY_CHAIN_MANAGER: None,
-    WAREHOUSE_MANAGER: ("In Transit", "Delivered"),
+    WAREHOUSE_MANAGER: ("Requested", "In Transit", "Delivered"),
     EMPLOYEE: ("Delivered",)
 }
 
@@ -38,6 +38,11 @@ def can_view_order(order):
 
 def can_edit_orders():
     return session.get("role") == SUPPLY_CHAIN_MANAGER
+
+def can_ship_orders():
+    # The warehouse manager moves requested orders to In Transit.
+    return session.get("role") == WAREHOUSE_MANAGER
+
 
 def can_manage_inventory():
     return session.get("role") == WAREHOUSE_MANAGER
@@ -91,6 +96,24 @@ def edit_permission_required(view):
 
     return wrapped
 
+
+
+def ship_permission_required(view):
+    """
+    Only the Warehouse Manager can mark requested orders as in transit.
+    """
+    @wraps(view)
+    @login_required
+    def wrapped(*args, **kwargs):
+        if not can_ship_orders():
+            if _is_api_request():
+                return jsonify(
+                    error="You do not have permission to ship orders."
+                ), 403
+            return redirect("/orders")
+        return view(*args, **kwargs)
+
+    return wrapped
 
 
 def inventory_view_required(view):

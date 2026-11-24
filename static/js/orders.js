@@ -11,6 +11,80 @@ function canEditOrders() {
 }
 
 /**
+ * Statuses whose orders are still on their way and can be acted on.
+ */
+const WARNING_STATUSES = ["Pending", "Requested", "In Transit"];
+
+/**
+ * Returns "late" if the order arrives after its required-by date,
+ * "near" if it arrives within the warning window before it, or "".
+ * Matches get_arrival_warnings on the server.
+ * @param {*} order
+ * @returns {string}
+ */
+function arrivalWarning(order) {
+    if (!WARNING_STATUSES.includes(order.status)) {
+        return "";
+    }
+
+    const days = Number(
+        document.getElementById("ordersTable").dataset.warningDays
+    );
+    const arrival = new Date(order.expected_arrival + "T00:00:00Z");
+    const required = new Date(order.required_by_date + "T00:00:00Z");
+    const dayInMilliseconds = 24 * 60 * 60 * 1000;
+
+    if (arrival > required) {
+        return "late";
+    }
+
+    if (required - arrival <= days * dayInMilliseconds) {
+        return "near";
+    }
+
+    return "";
+}
+
+/**
+ * Only the warehouse manager gets the Mark In Transit button.
+ */
+function canShipOrders() {
+    return document.getElementById("ordersTable").dataset.canShip === "true";
+}
+
+/**
+ * Sends a status change (request or ship) to the server.
+ * @param {number} orderId
+ * @param {string} action "request" or "ship"
+ * @param {string} question confirmation shown first
+ */
+async function changeOrderStatus(orderId, action, question) {
+    if (!confirm(question)) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`/api/orders/${orderId}/${action}`, {
+            method: "POST"
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            alert(result.error || "Unable to update order.");
+            return;
+        }
+
+        alert(result.message);
+        // Reload so the warehouse manager's notification updates too.
+        window.location.reload();
+
+    } catch (error) {
+        alert("Connection error. Order was not updated.");
+    }
+}
+
+/**
  * Retrieves orders from db and calls function to display them
  */
 async function loadOrders() {
@@ -182,7 +256,7 @@ function displayOrders(orders) {
         const row = document.createElement("tr");
         const cell = document.createElement("td");
 
-        cell.colSpan = canEditOrders() ? 8 : 7;
+        cell.colSpan = canEditOrders() || canShipOrders() ? 8 : 7;
         cell.textContent = searchTerm === ""
             ? "No orders found."
             : "No orders match your search.";
@@ -194,6 +268,15 @@ function displayOrders(orders) {
 
     orders.forEach(order => {
         const row = document.createElement("tr");
+
+        const warning = arrivalWarning(order);
+        if (warning === "late") {
+            row.classList.add("arrival-late");
+            row.title = "Arrives after the project start date";
+        } else if (warning === "near") {
+            row.classList.add("arrival-near");
+            row.title = "Arrives close to the project start date";
+        }
 
         const values = [
             order.id,
@@ -210,6 +293,23 @@ function displayOrders(orders) {
             cell.textContent = value;
             row.appendChild(cell);
         });
+
+        if (canShipOrders()) {
+            const actionsCell = document.createElement("td");
+
+            if (order.status === "Requested") {
+                const shipButton = document.createElement("button");
+                shipButton.textContent = "Mark In Transit";
+                shipButton.addEventListener("click", () => changeOrderStatus(
+                    order.id, "ship", "Mark this order as in transit?"
+                ));
+                actionsCell.appendChild(shipButton);
+            }
+
+            row.appendChild(actionsCell);
+            tableBody.appendChild(row);
+            return;
+        }
 
         if (!canEditOrders()) {
             tableBody.appendChild(row);
@@ -233,8 +333,19 @@ function displayOrders(orders) {
 
         cancelButton.disabled = expired || order.status !== "Pending";
         cancelButton.addEventListener("click", () => cancelOrder(order.id));
+        // Requesting is allowed any time while the order is pending,
+        // even after the 24 hour edit window.
+        const requestButton = document.createElement("button");
+        requestButton.textContent = "Request";
+        requestButton.disabled = order.status !== "Pending";
+        requestButton.addEventListener("click", () => changeOrderStatus(
+            order.id, "request",
+            "Request this order? The warehouse manager will be notified."
+        ));
+
         actionsCell.appendChild(editButton);
         actionsCell.appendChild(cancelButton);
+        actionsCell.appendChild(requestButton);
 
         row.appendChild(actionsCell);
         tableBody.appendChild(row);
@@ -265,6 +376,14 @@ document.addEventListener("DOMContentLoaded", () => {
         addOrderButton.addEventListener("click", () => {
             window.location.href = "/orders/new";
         });
+    }
+
+    // The warehouse manager's notification links to /orders#Requested.
+    const linkedStatus = decodeURIComponent(location.hash.slice(1));
+    const linkedTab = [...document.querySelectorAll(".status-tab")]
+        .find(tab => tab.dataset.status === linkedStatus);
+    if (linkedTab) {
+        selectTab(linkedTab);
     }
 
     loadOrders();

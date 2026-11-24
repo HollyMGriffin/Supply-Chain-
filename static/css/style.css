@@ -383,3 +383,57 @@ td button {
 .section-heading {
   margin-top: 40px;
 }
+
+/* WAREHOUSE MANAGER NOTIFICATION */
+
+.notice {
+  display: block;
+  margin-bottom: 20px;
+  padding: 12px 15px;
+  border: 1px solid #e0c36a;
+  border-radius: 5px;
+  background-color: #fff8e1;
+  color: #6b5200;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.notice:hover {
+  background-color: #fff1c2;
+}
+
+/* SUPPLY CHAIN MANAGER ARRIVAL WARNING */
+
+.notice-warning {
+  border-color: #e4aaaa;
+  background-color: #fff0f0;
+  color: #8a1f1f;
+  font-weight: normal;
+}
+
+.notice-warning:hover {
+  background-color: #fff0f0;
+}
+
+.notice-warning ul {
+  margin: 8px 0 0;
+  padding-left: 20px;
+}
+
+.late-tag {
+  margin-left: 4px;
+  padding: 1px 6px;
+  border-radius: 10px;
+  background-color: #b52b2b;
+  color: white;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+tr.arrival-near td {
+  background-color: #fff8e1;
+}
+
+tr.arrival-late td {
+  background-color: #fff0f0;
+}

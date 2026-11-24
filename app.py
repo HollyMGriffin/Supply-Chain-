@@ -6,9 +6,12 @@ from auth import (
     inventory_permission_required, inventory_view_required,
     admin_required, is_admin,
     can_edit_orders, can_manage_inventory, can_view_inventory,
-    visible_statuses
+    can_ship_orders, visible_statuses
 )
 from database import initialize_database
+from db.order_repository import (
+    count_orders_with_status, get_arrival_warnings, ARRIVAL_WARNING_DAYS
+)
 from routes.auth import auth_bp
 from routes.orders import orders_bp
 from routes.inventory import inventory_bp
@@ -33,9 +36,20 @@ initialize_database()
 @app.context_processor
 def inject_user():
     statuses = visible_statuses()
+    can_ship = can_ship_orders()
+    can_edit = can_edit_orders()
     return {
         "user": current_user(),
-        "can_edit": can_edit_orders(),
+        "can_edit": can_edit,
+        # Supply Chain Manager's notification: orders arriving close to,
+        # or after, their required-by (project start) date.
+        "arrival_warnings": get_arrival_warnings() if can_edit else [],
+        "arrival_warning_days": ARRIVAL_WARNING_DAYS,
+        "can_ship": can_ship,
+        # Warehouse manager's notification: orders waiting to be shipped.
+        "requested_count": (
+            count_orders_with_status("Requested") if can_ship else 0
+        ),
         "can_view_inventory": can_view_inventory(),
         "can_manage_inventory": can_manage_inventory(),
         "is_admin": is_admin(),

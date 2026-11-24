@@ -27,6 +27,7 @@
   </button>
   {% for status, label in [
     ("Pending", "Pending"),
+    ("Requested", "Requested"),
     ("In Transit", "In Transit"),
     ("Delivered", "Delivered"),
     ("Canceled", "Cancelled")
@@ -39,7 +40,12 @@
   {% endfor %}
 </div>
 
-<table id="ordersTable" data-can-edit="{{ 'true' if can_edit else 'false' }}">
+<table
+  id="ordersTable"
+  data-can-edit="{{ 'true' if can_edit else 'false' }}"
+  data-can-ship="{{ 'true' if can_ship else 'false' }}"
+  data-warning-days="{{ arrival_warning_days }}"
+>
   <thead>
     <tr>
       <th>Order #</th>
@@ -49,7 +55,7 @@
       <th>Est. Arrival</th>
       <th>Required By</th>
       <th>Status</th>
-      {% if can_edit %}
+      {% if can_edit or can_ship %}
       <th>Actions</th>
       {% endif %}
     </tr>

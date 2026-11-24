@@ -15,13 +15,19 @@ CREATE TABLE IF NOT EXISTS orders (
         CHECK (
             status IN (
                 'Pending',
+                'Requested',
                 'In Transit',
                 'Delivered',
                 'Canceled'
             )
         ),
 
-    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    -- The day expected_arrival was last moved forward. While an order
+    -- is still Pending (not shipped), its arrival date moves forward one
+    -- day for every day that passes. See order_repository.
+    arrival_rolled_on TEXT
 );
 
 CREATE TABLE IF NOT EXISTS users (
